@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>darsh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="explorer.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #07090a;
+      --bg-deep:      #040506;
+      --text:         #d6ece0;
+      --muted:        rgba(190, 230, 205, 0.44);
+      --accent:       #39d353;
+      --accent-glow:  rgba(57, 211, 83, 0.13);
+      --panel-border: rgba(57, 211, 83, 0.13);
+      --shadow:       0 32px 90px rgba(0, 0, 0, 0.55);
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+      --pointer-x:    0;
+      --pointer-y:    0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    body {
+      position: relative;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(57, 211, 83, 0.07), transparent 30%),
+        radial-gradient(circle at 80% 76%, rgba(57, 211, 83, 0.04), transparent 28%),
+        linear-gradient(155deg, var(--bg-deep) 0%, var(--bg) 55%, #060d08 100%);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: stretch;
+      -webkit-font-smoothing: antialiased;
+      isolation: isolate;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(12px);
+      z-index: -1;
+      animation: ambientFloat 18s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 34vw;
+      height: 34vw;
+      min-width: 260px;
+      min-height: 260px;
+      left: -8vw;
+      top: -12vh;
+      background: radial-gradient(circle, rgba(57, 211, 83, 0.14) 0%, rgba(57, 211, 83, 0) 70%);
+    }
+
+    body::after {
+      width: 28vw;
+      height: 28vw;
+      min-width: 220px;
+      min-height: 220px;
+      right: -4vw;
+      bottom: -10vh;
+      background: radial-gradient(circle, rgba(57, 211, 83, 0.07) 0%, rgba(57, 211, 83, 0) 68%);
+      animation-duration: 22s;
+      animation-delay: -7s;
+    }
+
+    .col-left,
+    .col-right {
+      transition: transform 1.15s var(--ease);
+      will-change: transform;
+    }
+
+    .col-left {
+      flex: 0 0 44%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate3d(calc(var(--pointer-x) * -10px), calc(var(--pointer-y) * -10px), 0);
+    }
+
+    .circle-wrap {
+      width: min(62%, 40vh);
+      aspect-ratio: 1;
+      opacity: 0;
+      animation: rise 1.8s 0.15s var(--ease) forwards, haloFloat 10s ease-in-out 1.2s infinite;
+      will-change: transform, opacity;
+    }
+
+    .circle-wrap svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.22));
+    }
+
+    .circle-base {
+      fill: none;
+      stroke: rgba(57, 211, 83, 0.16);
+      stroke-width: 0.8;
+    }
+
+    .circle-accent {
+      fill: none;
+      stroke: rgba(57, 211, 83, 0.32);
+      stroke-width: 0.55;
+      stroke-linecap: round;
+      stroke-dasharray: 18 14;
+      animation: ringDrift 12s linear infinite;
+    }
+
+    .col-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding-right: 8vw;
+      transform: translate3d(calc(var(--pointer-x) * 14px), calc(var(--pointer-y) * 14px), 0);
+    }
+
+    .text-block {
+      opacity: 0;
+      animation: rise 1.5s 0.45s var(--ease) forwards;
+      will-change: transform, opacity;
+    }
+
+    .greeting {
+      font-size: clamp(2.6rem, 5.2vw, 6.2rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .greeting strong {
+      font-weight: 700;
+    }
+
+    .sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5ch;
+      font-size: clamp(1rem, 1.8vw, 1.75rem);
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: -0.01em;
+    }
+
+    .descriptor {
+      display: inline-block;
+      min-width: 14ch;
+      color: var(--text);
+      transform-origin: left center;
+      transition: opacity 0.38s ease, transform 0.48s var(--ease), filter 0.48s ease;
+      will-change: transform, opacity, filter;
+    }
+
+    .descriptor.fading {
+      opacity: 0;
+      transform: translateY(0.45em) scale(0.985);
+      filter: blur(6px);
+    }
+
+    .dock {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      padding: 14px 18px;
+      background: linear-gradient(
+        170deg,
+        rgba(57, 211, 83, 0.07) 0%,
+        rgba(57, 211, 83, 0.03) 100%
+      );
+      backdrop-filter: blur(40px) saturate(160%);
+      -webkit-backdrop-filter: blur(40px) saturate(160%);
+      border: 1px solid rgba(57, 211, 83, 0.14);
+      border-bottom-color: rgba(57, 211, 83, 0.07);
+      border-radius: 22px;
+      overflow: visible;
+      opacity: 0;
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 24px 64px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(57, 211, 83, 0.12);
+      will-change: transform, opacity;
+      animation:
+        dockRise 1.2s 0.85s var(--ease) forwards,
+        softPulse 8s ease-in-out 2.2s infinite;
+    }
+
+    .dock-item {
+      width: 64px;
+      height: 64px;
+      cursor: pointer;
+      transform-origin: bottom center;
+      flex-shrink: 0;
+      border-radius: 16px;
+      background: #0b1610;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.28s ease;
+      will-change: transform;
+    }
+
+    .dock-item:hover {
+      filter: brightness(1.15);
+    }
+
+    .dock-item i {
+      font-size: 48px;
+      color: var(--accent);
+      pointer-events: none;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(10px); }
+      to { opacity: 1; transform: none; filter: blur(0); }
+    }
+
+    @keyframes dockRise {
+      from { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.96); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    }
+
+    @keyframes ambientFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(18px, 12px, 0) scale(1.08); }
+    }
+
+    @keyframes haloFloat {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -10px, 0); }
+    }
+
+    @keyframes ringDrift {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -320; }
+    }
+
+    @keyframes softPulse {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(57,211,83,0.12); }
+      50%       { box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 28px 72px rgba(0,0,0,0.6),  inset 0 1px 0 rgba(57,211,83,0.18); }
+    }
+
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+        justify-content: center;
+        padding: 8vh 7vw 16vh;
+      }
+
+      .col-left,
+      .col-right {
+        flex: none;
+        transform: none;
+        transition: none;
+      }
+
+      .col-left {
+        justify-content: flex-start;
+        margin-bottom: 2rem;
+      }
+
+      .circle-wrap {
+        width: min(52vw, 240px);
+      }
+
+      .col-right {
+        padding-right: 0;
+      }
+
+      .dock {
+        bottom: 14px;
+        transform: translateX(-50%) scale(0.94);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .col-left,
+      .col-right,
+      .descriptor,
+      .dock-item {
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="col-left">
+    <div class="circle-wrap">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle class="circle-base" cx="50" cy="50" r="47" />
+        <circle class="circle-accent" cx="50" cy="50" r="47" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="col-right">
+    <div class="text-block">
+      <p class="greeting">Hi, <strong>Darsh</strong> here.</p>
+      <p class="sub">im a <span class="descriptor" id="descriptor">developer</span></p>
+    </div>
+  </div>
+
+  <div class="dock" aria-label="desktop dock">
+    <div class="dock-item" title="Windows" aria-label="Windows">
+      <i class="fa-brands fa-microsoft"></i>
+    </div>
+
+    <div class="dock-item" title="Search" aria-label="Search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+
+    <div class="dock-item" title="Files" aria-label="Files">
+      <i class="fa-solid fa-folder-closed"></i>
+    </div>
+
+    <div class="dock-item" title="Chrome" aria-label="Chrome">
+      <i class="fa-brands fa-chrome"></i>
+    </div>
+
+    <div class="dock-item" title="Skills" aria-label="Skills">
+      <i class="fa-solid fa-hexagon-nodes"></i>
+    </div>
+  </div>
+
+  <script src="explorer.js" defer></script>
+  <script>
+    const words = ['developer', 'student', 'builder', 'experimenter', 'problem solver', 'gamer', 'enthusiast', 'learner', 'thinker', 'tinkerer', 'innovator'];
+    const descriptor = document.getElementById('descriptor');
+    let descriptorIndex = 0;
+
+    setInterval(() => {
+      descriptor.classList.add('fading');
+      window.setTimeout(() => {
+        descriptorIndex = (descriptorIndex + 1) % words.length;
+        descriptor.textContent = words[descriptorIndex];
+        descriptor.classList.remove('fading');
+      }, 100);
+    }, 2800);
+
+    const root = document.documentElement;
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
+    let pointerCurrentX = 0;
+    let pointerCurrentY = 0;
+
+    window.addEventListener('mousemove', event => {
+      pointerTargetX = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointerTargetY = (event.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      pointerTargetX = 0;
+      pointerTargetY = 0;
+    });
+
+    const dock = document.querySelector('.dock');
+    const dockItems = [...dock.querySelectorAll('.dock-item')];
+    const spread = 140;
+    const maxScale = 1.2;
+    const baseLift = 14;
+    const currentScales = dockItems.map(() => 1);
+    const targetScales = dockItems.map(() => 1);
+
+    dock.addEventListener('mousemove', event => {
+      dockItems.forEach((item, index) => {
+        const rect = item.getBoundingClientRect();
+        const center = rect.left + rect.width / 2;
+        const distance = Math.abs(event.clientX - center);
+        targetScales[index] = distance < spread
+          ? 1 + (maxScale - 1) * Math.cos((distance / spread) * (Math.PI / 2))
+          : 1;
+      });
+    });
+
+    dock.addEventListener('mouseleave', () => {
+      targetScales.fill(1);
+    });
+
+    const animate = () => {
+      pointerCurrentX += (pointerTargetX - pointerCurrentX) * 0.05;
+      pointerCurrentY += (pointerTargetY - pointerCurrentY) * 0.05;
+      root.style.setProperty('--pointer-x', pointerCurrentX.toFixed(4));
+      root.style.setProperty('--pointer-y', pointerCurrentY.toFixed(4));
+
+      dockItems.forEach((item, index) => {
+        currentScales[index] += (targetScales[index] - currentScales[index]) * 0.10;
+        const scale = currentScales[index];
+        const lift = (scale - 1) * -baseLift;
+        item.style.transform = `translate3d(0, ${lift.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+      });
+
+      window.requestAnimationFrame(animate);
+    };
+
+    window.requestAnimationFrame(animate);
+  </script>
+
+</body>
+</html>

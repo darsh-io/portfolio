@@ -1,0 +1,22 @@
+{
+  "skills": [
+    { "name": "Python",              "status": "verified",   "projects": ["AsciiCraft", "Wordl-assIST", "Hangman's Savior", "Turtle Master", "Ultimate Ciphex", "MC Stronghold Finder", "DARSHBOT Tic Tac Toe", "Valorant Stat Puller", "GIS", "67speed Score Spoofer", "PolyTrack Time Spoofer", "Deadaimbot.io", "Osu!Mania Bot", "JKLM BombBot", "Portable PC Stats"] },
+    { "name": "Game Development",    "status": "verified",   "projects": ["Comber", "DARSHBOT Tic Tac Toe", "DARSHBOT Othello", "RetroDoom", "ESP32 Tank", "Coin Maniac"] },
+    { "name": "Embedded Systems",    "status": "verified",   "projects": ["ESP32 Tank", "Portable PC Stats", "Rubik's Cube Solver", "Writer Lego 51515", "RetroDoom"] },
+    { "name": "Automation",          "status": "verified",   "projects": ["JKLM BombBot", "Osu!Mania Bot", "Prank Batch & VBS", "Deadaimbot.io"] },
+    { "name": "MicroPython",         "status": "verified",   "projects": ["Rubik's Cube Solver", "Writer Lego 51515", "RetroDoom"] },
+    { "name": "Robotics",            "status": "verified",   "projects": ["Rubik's Cube Solver", "Writer Lego 51515"] },
+    { "name": "Network Interception","status": "verified",   "projects": ["67speed Score Spoofer", "PolyTrack Time Spoofer"] },
+    { "name": "Cryptography",        "status": "verified",   "projects": ["Ultimate Ciphex"] },
+    { "name": "AI / ML",             "status": "proficient", "projects": ["DARSHBOT Tic Tac Toe", "DARSHBOT Othello", "Wordl-assIST", "Hangman's Savior", "AI Chatbot"] },
+    { "name": "HTML + CSS",          "status": "proficient", "projects": ["AsciiCraft", "AI Chatbot", "Coin Maniac"] },
+    { "name": "Computer Vision",     "status": "proficient", "projects": ["Deadaimbot.io", "AsciiCraft", "GIS"] },
+    { "name": "Image Processing",    "status": "proficient", "projects": ["AsciiCraft", "Turtle Master", "GIS"] },
+    { "name": "Web APIs",            "status": "proficient", "projects": ["Valorant Stat Puller", "AI Chatbot"] },
+    { "name": "Linux / Networking",  "status": "proficient", "projects": ["MC Server Hosting", "Domain Acquisition", "OpenClaw"] },
+    { "name": "Unity",               "status": "proficient", "projects": ["Comber"] },
+    { "name": "JavaScript",          "status": "learning",   "projects": ["AsciiCraft", "AI Chatbot", "Coin Maniac"] },
+    { "name": "C#",                  "status": "learning",   "projects": ["Comber"] },
+    { "name": "C++",                 "status": "learning",   "projects": ["Portable PC Stats"] }
+  ]
+}

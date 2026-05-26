@@ -11,7 +11,7 @@
           "type": "dir",
           "children": [
             {
-              "name": "darshbot-ttt",
+              "name": "darshbot-tic-tac-toe",
               "type": "dir",
               "children": [
                 {
@@ -107,7 +107,7 @@
           "type": "dir",
           "children": [
             {
-              "name": "asciiccraft",
+              "name": "asciicraft",
               "type": "dir",
               "children": [
                 {
@@ -191,7 +191,7 @@
               ]
             },
             {
-              "name": "valorant-stats",
+              "name": "valorant-stat-puller",
               "type": "dir",
               "children": [
                 {
@@ -233,7 +233,7 @@
           "type": "dir",
           "children": [
             {
-              "name": "rubiks-solver",
+              "name": "rubiks-cube-solver",
               "type": "dir",
               "children": [
                 {
@@ -245,7 +245,7 @@
               ]
             },
             {
-              "name": "writer-lego",
+              "name": "writer-lego-51515",
               "type": "dir",
               "children": [
                 {
@@ -287,7 +287,7 @@
           "type": "dir",
           "children": [
             {
-              "name": "jklm-bot",
+              "name": "jklm-bombbot",
               "type": "dir",
               "children": [
                 {
@@ -299,7 +299,7 @@
               ]
             },
             {
-              "name": "osu-bot",
+              "name": "osu-mania-bot",
               "type": "dir",
               "children": [
                 {
@@ -311,7 +311,7 @@
               ]
             },
             {
-              "name": "prank-scripts",
+              "name": "prank-batch-vbs",
               "type": "dir",
               "children": [
                 {
@@ -323,7 +323,7 @@
               ]
             },
             {
-              "name": "mc-server",
+              "name": "mc-server-hosting",
               "type": "dir",
               "children": [
                 {
@@ -341,7 +341,7 @@
           "type": "dir",
           "children": [
             {
-              "name": "67speed-spoofer",
+              "name": "67speed-score-spoofer",
               "type": "dir",
               "children": [
                 {
@@ -353,7 +353,7 @@
               ]
             },
             {
-              "name": "polytrack-spoofer",
+              "name": "polytrack-time-spoofer",
               "type": "dir",
               "children": [
                 {
@@ -365,7 +365,7 @@
               ]
             },
             {
-              "name": "deadaimbot",
+              "name": "deadaimbot-io",
               "type": "dir",
               "children": [
                 {
@@ -395,7 +395,7 @@
               ]
             },
             {
-              "name": "domain-setup",
+              "name": "domain-acquisition",
               "type": "dir",
               "children": [
                 {

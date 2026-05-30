@@ -23,6 +23,18 @@
               ]
             },
             {
+              "name": "openclaw",
+              "type": "dir",
+              "children": [
+                {
+                  "name": "README.md",
+                  "type": "file",
+                  "ext": "md",
+                  "content": "# OPENCLAW INSTANCE — Self-Hosted AI Agent\n\nSet up and hosted an OpenClaw instance as a self-managed AI agent platform.\n\n## How it works\n\nConfigured the backend, database, and automation services to run continuously on a VPS. Integrated scheduling, tool execution, and remote access while handling deployment, configuration, and maintenance.\n\n## Stack\n\n- Docker\n- Linux\n- Python\n- OpenClaw\n\n## Challenges\n\nThe setup happened at around 2 AM, which probably wasn't the ideal time for debugging. Cron jobs were particularly unreliable and required significant troubleshooting. OpenClaw was also still relatively immature at the time, so documentation and community resources were limited, making issue diagnosis much harder."
+                }
+              ]
+            },
+            {
               "name": "darshbot-othello",
               "type": "dir",
               "children": [

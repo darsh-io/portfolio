@@ -418,8 +418,8 @@
           "name": "about.md",
           "type": "file",
           "ext": "md",
-          "content": "# About\n\nI'm Darsh. 13 years old. I build things.\n\n## What I spend time on\n\nPython mostly — tools, automation, AI experiments. Unity when I feel like making a game. Hardware projects when I want something physical. Web stuff when the project calls for it.\n\n## How I got here\n\nStarted with Scratch. Moved to Python when Scratch stopped being interesting. Kept going because making things that actually work is genuinely satisfying.\n\n## What I'm figuring out\n\nHow to finish projects instead of just starting them. Systems that stay reliable over time. Code that doesn't embarrass me a month later.\n\n## What I'm not\n\nA startup founder. Not passionate about disrupting anything. Not trying to sound impressive. Just building things."
-        },
+          "content": "# About\n\nI'm Darsh. 13 years old. I build things.\n\n## What I spend time on\n\nPython mostly — tools, automation, AI experiments. Unity when I feel like making a game. Hardware projects when I want something physical. Web stuff when the project calls for it.\n\n## How I got here\n\nStarted with Khan Academy's JavaScript course. Weird beginning, but sure. After which, I devolved into Scratch. Moved to Python when Scratch stopped being interesting. Kept going because the skill ceiling and fun factor were both really high. Recently, I then started doing some Unity and C# alongside electronics and embedded systems.\n\n## What I'm figuring out\n\nHow to finish projects instead of just starting them. Systems that stay reliable over time. Code that doesn't embarrass me a month later.\n\n## What I'm not\n\nA startup founder. (for now)  Not passionate about disrupting anything. Not trying to sound impressive. Just building things."
+        }, 
         {
           "name": "contact.md",
           "type": "file",

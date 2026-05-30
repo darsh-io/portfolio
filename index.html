@@ -177,6 +177,7 @@
       position: fixed;
       left: 50%;
       bottom: 22px;
+      transform: translateX(-50%);
       display: flex;
       align-items: flex-end;
       gap: 14px;
@@ -287,7 +288,17 @@
 
       .dock {
         bottom: 14px;
-        transform: translateX(-50%) scale(0.94);
+        gap: 10px;
+        padding: 10px 14px;
+      }
+
+      .dock-item {
+        width: 52px;
+        height: 52px;
+      }
+
+      .dock-item i {
+        font-size: 38px;
       }
     }
 
@@ -361,7 +372,7 @@
         descriptorIndex = (descriptorIndex + 1) % words.length;
         descriptor.textContent = words[descriptorIndex];
         descriptor.classList.remove('fading');
-      }, 100);
+      }, 420);
     }, 2800);
 
     const root = document.documentElement;

@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const [fsRes, skRes] = await Promise.all([
-      fetch('./filesystem.json'),
-      fetch('./skills.json'),
+      fetch('./Data/filesystem.json'),
+      fetch('./Data/skills.json'),
     ]);
     if (!fsRes.ok) throw new Error(`filesystem: ${fsRes.statusText}`);
     if (!skRes.ok) throw new Error(`skills: ${skRes.statusText}`);

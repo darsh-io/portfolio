@@ -302,6 +302,87 @@
       }
     }
 
+    /* ── Notch ── */
+    .notch {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100vw / 6);
+      min-width: 160px;
+      max-width: 260px;
+      height: 50px;
+      background: rgba(4, 8, 5, 0.92);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(57, 211, 83, 0.13);
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      z-index: 700;
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 16px 48px rgba(0, 0, 0, 0.5),
+        inset 0 -1px 0 rgba(57, 211, 83, 0.06);
+      opacity: 0;
+      will-change: transform, opacity;
+      animation: notchDrop 0.9s 0.5s var(--ease) forwards;
+    }
+
+    @keyframes notchDrop {
+      from { opacity: 0; transform: translateX(-50%) translateY(-100%); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    .notch-track {
+      position: relative;
+      width: 100%;
+      height: 28px;
+      background: rgba(57, 211, 83, 0.04);
+      border: 1px solid rgba(57, 211, 83, 0.08);
+      border-radius: 14px;
+      display: flex;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .notch-thumb {
+      position: absolute;
+      top: 3px;
+      height: calc(100% - 6px);
+      background: rgba(57, 211, 83, 0.16);
+      border: 1px solid rgba(57, 211, 83, 0.3);
+      border-radius: 11px;
+      box-shadow: 0 0 12px rgba(57, 211, 83, 0.1);
+      transition: left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      will-change: left;
+    }
+
+    .notch-seg {
+      flex: 1;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .notch-seg:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: rgba(57, 211, 83, 0.1);
+      pointer-events: none;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -335,6 +416,15 @@
     <div class="text-block">
       <p class="greeting">Hi, <strong>Darsh</strong> here.</p>
       <p class="sub">im a <span class="descriptor" id="descriptor">developer</span></p>
+    </div>
+  </div>
+
+  <div class="notch" id="notch" aria-label="Notch control">
+    <div class="notch-track" id="notchTrack" role="slider" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1" aria-label="Position">
+      <div class="notch-thumb" id="notchThumb"></div>
+      <button class="notch-seg" data-pos="0" aria-label="Left"></button>
+      <button class="notch-seg" data-pos="1" aria-label="Center"></button>
+      <button class="notch-seg" data-pos="2" aria-label="Right"></button>
     </div>
   </div>
 
@@ -431,6 +521,55 @@
     };
 
     window.requestAnimationFrame(animate);
+
+    // ── Notch slider ────────────────────────────
+    (function () {
+      const track = document.getElementById('notchTrack');
+      const thumb = document.getElementById('notchThumb');
+      let pos = 1;
+
+      function layout () {
+        const tw  = track.offsetWidth;
+        const segW = tw / 3;
+        const PAD  = 3;
+        thumb.style.width = `${segW - PAD * 2}px`;
+        thumb.style.left  = `${PAD + pos * segW}px`;
+      }
+
+      function snap (newPos, animate = true) {
+        if (newPos === pos && animate) return;
+        if (!animate) thumb.style.transition = 'none';
+        pos = newPos;
+        layout();
+        track.setAttribute('aria-valuenow', pos);
+        document.dispatchEvent(new CustomEvent('notch-change', { detail: { pos } }));
+        if (!animate) requestAnimationFrame(() => { thumb.style.transition = ''; });
+      }
+
+      function posFromX (clientX) {
+        const rect = track.getBoundingClientRect();
+        const x = (clientX - rect.left) / rect.width;
+        return Math.max(0, Math.min(2, Math.floor(x * 3)));
+      }
+
+      track.querySelectorAll('.notch-seg').forEach(seg => {
+        seg.addEventListener('click', () => snap(+seg.dataset.pos));
+      });
+
+      let dragging = false;
+      track.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+      document.addEventListener('mousemove', e => { if (dragging) snap(posFromX(e.clientX)); });
+      document.addEventListener('mouseup',   () => { dragging = false; });
+
+      track.addEventListener('touchstart', () => { dragging = true; }, { passive: true });
+      document.addEventListener('touchmove', e => {
+        if (dragging) snap(posFromX(e.touches[0].clientX));
+      }, { passive: true });
+      document.addEventListener('touchend', () => { dragging = false; });
+
+      window.addEventListener('resize', layout);
+      requestAnimationFrame(() => snap(1, false));
+    })();
   </script>
 
 </body>

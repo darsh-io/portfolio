@@ -1,38 +1,41 @@
 // Requires a local server (e.g. VS Code Live Server) — fetch() won't work over file://
 
 document.addEventListener('DOMContentLoaded', async () => {
-  let filesystem, skillsData;
+  let fsData = null, skillsData = null;
 
   try {
     const [fsRes, skRes] = await Promise.all([
       fetch('./Data/filesystem.json'),
       fetch('./Data/skills.json'),
     ]);
-    if (!fsRes.ok) throw new Error(`filesystem: ${fsRes.statusText}`);
-    if (!skRes.ok) throw new Error(`skills: ${skRes.statusText}`);
-    [filesystem, skillsData] = await Promise.all([fsRes.json(), skRes.json()]);
-    filesystem = _loadFilesystem(filesystem);
-    _filesystem = filesystem;
+    if (fsRes.ok) fsData     = await fsRes.json();
+    if (skRes.ok) skillsData = await skRes.json();
   } catch (err) {
+    // Over file:// or with a blocked/404 request the apps fall back to
+    // cached/empty data — the desktop must stay usable regardless.
     console.warn('[apps] Could not load data:', err.message);
-    return;
   }
 
-  const explorer  = new FileExplorer(filesystem);
-  const browser   = new BrowserApp();
-  const skills    = new SkillsApp(skillsData.skills);
-  const terminal  = new TerminalApp(filesystem, () => explorer.refresh());
-  const startMenu = new StartMenu([
-    { name: 'Files',    icon: 'fa-solid fa-folder-closed', app: explorer },
-    { name: 'Chrome',   icon: 'fa-brands fa-chrome',       app: browser  },
-    { name: 'Skills',   icon: 'fa-solid fa-hexagon-nodes', app: skills   },
-    { name: 'Terminal', icon: 'fa-solid fa-terminal',      app: terminal },
+  // localStorage cache wins (persisted edits); else fetched data; else empty root.
+  const filesystem = _loadFilesystem(fsData || { name: '~', type: 'dir', children: [] });
+  const skills     = (skillsData && skillsData.skills) || [];
+  _filesystem = filesystem;
+
+  const explorerApp = new FileExplorer(filesystem);
+  const browserApp  = new BrowserApp();
+  const skillsApp   = new SkillsApp(skills);
+  const terminalApp = new TerminalApp(filesystem, () => explorerApp.refresh());
+  const startMenu   = new StartMenu([
+    { name: 'Files',    icon: 'fa-solid fa-folder-closed', app: explorerApp },
+    { name: 'Chrome',   icon: 'fa-brands fa-chrome',       app: browserApp  },
+    { name: 'Skills',   icon: 'fa-solid fa-hexagon-nodes', app: skillsApp   },
+    { name: 'Terminal', icon: 'fa-solid fa-terminal',      app: terminalApp },
   ]);
 
-  document.querySelector('[title="Files"]')    ?.addEventListener('click', () => explorer.toggle());
-  document.querySelector('[title="Chrome"]')   ?.addEventListener('click', () => browser.toggle());
-  document.querySelector('[title="Skills"]')   ?.addEventListener('click', () => skills.toggle());
-  document.querySelector('[title="Terminal"]') ?.addEventListener('click', () => terminal.toggle());
+  document.querySelector('[title="Files"]')    ?.addEventListener('click', () => explorerApp.toggle());
+  document.querySelector('[title="Chrome"]')   ?.addEventListener('click', () => browserApp.toggle());
+  document.querySelector('[title="Skills"]')   ?.addEventListener('click', () => skillsApp.toggle());
+  document.querySelector('[title="Terminal"]') ?.addEventListener('click', () => terminalApp.toggle());
   document.querySelector('[title="Windows"]')  ?.addEventListener('click', () => startMenu.toggle());
   document.querySelector('[title="Search"]')   ?.addEventListener('click', () => startMenu.toggle());
 });
@@ -56,8 +59,16 @@ class FileExplorer {
 
   refresh () {
     if (!this._el.classList.contains('is-open')) return;
-    const node = _resolveNode(this.root, this.stack.map(n => n.name).concat(this.node === this.root ? [] : [this.node.name]));
-    if (!node || node.type !== 'dir') { this.stack = []; this.node = this.root; }
+    // stack[0] is the root itself; the path below root excludes it.
+    const path = this.stack.slice(1).map(n => n.name)
+      .concat(this.node === this.root ? [] : [this.node.name]);
+    const node = _resolveNode(this.root, path);
+    if (node && node.type === 'dir') {
+      this.node = node;                       // re-point to the live tree node
+    } else {
+      this.stack = [];
+      this.node  = this.root;                 // current dir was removed — go home
+    }
     this._updateBreadcrumb();
     this._render();
   }

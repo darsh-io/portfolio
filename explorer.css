@@ -691,3 +691,160 @@
 }
 
 .explorer-overlay.is-open { display: block; }
+
+/* ── Terminal window ── */
+.terminal-window {
+  background: #0c0c0c;
+  border-color: rgba(255, 255, 255, 0.09);
+  width: min(760px, 92vw);
+  height: min(520px, 84vh);
+  top: calc(50% - 20px);
+  left: calc(50% - 20px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.7),
+    0 48px 120px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.terminal-window .explorer-titlebar {
+  background: #111;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.terminal-window .explorer-title-text {
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.04em;
+}
+
+.terminal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.term-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px 6px;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: #c8c8c8;
+  word-break: break-all;
+  overscroll-behavior: contain;
+}
+
+.term-output::-webkit-scrollbar       { width: 4px; }
+.term-output::-webkit-scrollbar-track { background: transparent; }
+.term-output::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+
+.term-line { white-space: pre-wrap; min-height: 1em; }
+
+.term-ps   { color: rgba(255, 255, 255, 0.4); }
+.term-cmd  { color: #fff; }
+
+.term-muted   { color: rgba(255, 255, 255, 0.28); }
+.term-err     { color: #e06c75; }
+.term-welcome { color: rgba(255, 255, 255, 0.55); font-style: italic; }
+
+.term-ls { display: flex; flex-wrap: wrap; gap: 0 2ch; }
+.ls-dir  { color: #fff; font-weight: 700; }
+.ls-file { color: #c8c8c8; }
+
+.term-help {}
+.help-cmd  { color: #e0e0e0; font-weight: 500; }
+.help-desc { color: rgba(255, 255, 255, 0.35); }
+
+.term-input-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 18px 12px;
+  flex-shrink: 0;
+  gap: 0;
+}
+
+.term-prompt {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.term-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  caret-color: #fff;
+  padding: 0;
+}
+
+/* ── Nano overlay ── */
+.nano-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  background: #0c0c0c;
+  z-index: 5;
+}
+
+.nano-overlay.is-open {
+  display: flex;
+}
+
+.nano-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 14px;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  gap: 16px;
+}
+
+.nano-top {
+  background: #e0e0e0;
+  color: #111;
+}
+
+.nano-fname {
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nano-mod { color: #555; font-style: italic; }
+
+.nano-editor {
+  flex: 1;
+  background: #0c0c0c;
+  color: #d0d0d0;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 14px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  overflow-y: auto;
+  caret-color: #fff;
+}
+
+.nano-editor::-webkit-scrollbar       { width: 4px; }
+.nano-editor::-webkit-scrollbar-track { background: transparent; }
+.nano-editor::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+
+.nano-bot {
+  background: #1a1a1a;
+  color: rgba(255, 255, 255, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
